@@ -1,0 +1,38 @@
+{
+  "name": "city_checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "bin": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf ./bin && pkg . --out-path bin && cp -r ./resources/. ./bin"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "chrome-cookies-secure": "^2.0.0",
+    "exceljs": "^4.3.0",
+    "puppeteer": "^19.4.1",
+    "puppeteer-extra": "^3.3.4",
+    "puppeteer-extra-plugin-adblocker": "^2.13.5",
+    "puppeteer-extra-plugin-minmax": "^1.1.2",
+    "puppeteer-extra-plugin-stealth": "^2.11.1",
+    "sqlite3": "^5.1.4"
+  },
+  "pkg": {
+    "scripts": "./bin/main.js",
+    "targets": [
+      "node16-win-x64"
+    ],
+    "assets": [
+      "./node_modules/puppeteer-extra-plugin-stealth/evasions/**/*.js",
+      "./node_modules/puppeteer-extra-plugin-stealth/evasions/**/*.json",
+      "./node_modules/sqlite3/lib/binding/napi-v6-win32-unknown-x64/node_sqlite3.node",
+      "./node_modules/win-dpapi/**/*.node",
+      "./node_modules/win-dpapi/**/**/*.node"
+    ]
+  }
+}
