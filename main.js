@@ -71,6 +71,10 @@ async function startApp() {
 
                 result = extractLogin(result);
 
+                if (name.indexOf("<") != -1) {
+                    name = name.split("<")[0];
+                }
+
                 ownerIds.push({ idx: cityNames[i].idx, id, name, city: cityNames[i].val, result });
             }
 
