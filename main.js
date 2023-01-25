@@ -68,27 +68,51 @@ async function startApp() {
                 $ = await moveTo(page, regHost + id, "body > div", minimized);
 
                 let result = $("body > div > center > table > tbody > tr > td > div:nth-child(1) > div.col-md-5 > table > tbody > tr:nth-child(1) > td:nth-child(2)").html();
+                let belong = $("body > div > center > table > tbody > tr > td > div:nth-child(1) > div.col-md-5 > table > tbody > tr:nth-child(2) > td:nth-child(2)").html();
 
                 result = extractLogin(result);
+                let isGovernor = extractBelong(belong);
 
                 if (name.indexOf("<") != -1) {
                     name = name.split("<")[0];
                 }
 
-                ownerIds.push({ idx: cityNames[i].idx, id, name, city: cityNames[i].val, result });
+                ownerIds.push({
+                    idx: cityNames[i].idx,
+                    city: cityNames[i].val,
+                    id,
+                    name,
+                    result,
+                    isGovernor
+                });
             }
 
             await setData(workbook, worksheet, ownerIds);
 
             close(browser);
 
-            /**
-             * Excel Data Create
-             */
         });
     });
 }
 
+/**
+ * 주지사 상태 추출
+ * @param {String} el 
+ * @returns 
+ */
+function extractBelong(el) {
+    if (el.indexOf("州") == -1) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * 접속 상태 추출
+ * @param {String} el 
+ * @returns 
+ */
 function extractLogin(el) {
     let startWith = el.indexOf("전 접속");
 
@@ -103,6 +127,11 @@ function extractLogin(el) {
     }
 }
 
+/**
+ * 위키 상 유저 아이디 이름 추출
+ * @param {String} el 
+ * @returns 
+ */
 function extractText(el) {
     if (el.substring(0, 1) == "<") {
         const startWith = el.indexOf(">") + 1;
@@ -114,18 +143,32 @@ function extractText(el) {
     }
 }
 
+/**
+ * 사용자 ID Filter
+ * @param {String} el 
+ * @returns 
+ */
 function getId(el) {
     if (el.indexOf('| id') == 0) {
         return true;
     }
 }
 
+/**
+ * 사용자 이름 Filter
+ * @param {String} el 
+ * @returns 
+ */
 function getName(el) {
     if (el.indexOf('| name') == 0) {
         return true;
     }
 }
 
+/**
+ * 브라우저 쿠키 세팅
+ * @param {*} callback 
+ */
 const getCookies = (callback) => {
     chrome.getCookies(host, 'puppeteer', function (err, cookies) {
         if (err) {
@@ -136,6 +179,14 @@ const getCookies = (callback) => {
     }, 'Default') // e.g. 'Profile 2'
 }
 
+/**
+ * 페이지 이동
+ * @param {browser.newPage()} page 
+ * @param {String} url 
+ * @param {String} waitFor 
+ * @param {boolean} minimize 
+ * @returns 
+ */
 async function moveTo(page, url, waitFor, minimize) {
     await page.goto(url);
 
@@ -160,6 +211,10 @@ async function moveTo(page, url, waitFor, minimize) {
     return cheerio.load(content);
 }
 
+/**
+ * Chromium 닫기
+ * @param {browser} browser 
+ */
 async function close(browser) {
     await browser.close();
 }

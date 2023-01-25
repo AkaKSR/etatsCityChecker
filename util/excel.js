@@ -43,6 +43,17 @@ async function setData(workbook, worksheet, dataArr) {
         // 접속여부
         cell = row.getCell("D");
         cell.value = dataArr[i].result;
+
+        // 일치여부
+        cell = row.getCell("E");
+        if (!dataArr[i].isGovernor) {
+            cell.value = "수정 필요";
+            
+            // XXX ExcelJS에서 특정 셀에서 색상 지정이 안되고 있다.
+            // cell.font = {
+            //     color: { argb: 'FFFF0000' }
+            // };
+        }
     }
 
     await workbook.xlsx.writeFile(xlsxFile);
