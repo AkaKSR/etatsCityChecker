@@ -13,7 +13,7 @@ async function loadFile() {
 async function getCities(worksheet) {
     let result = [];
 
-    for (var i = 3; i < worksheet.rowCount; i++) {
+    for (var i = 3; i < worksheet.rowCount+1; i++) {
         var row = worksheet.getRow(i);
         var cell = row.getCell("A");
 
